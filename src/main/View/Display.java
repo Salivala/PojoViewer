@@ -1,16 +1,9 @@
-package main.View;
-
-import main.Model;
+package View;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.time.temporal.ChronoUnit;
-import java.util.Enumeration;
-import java.util.Scanner;
 
 /**
  * Display for the main application
@@ -19,22 +12,28 @@ public class Display {
     private JFrame frame;
     private JLabel inputLabel;
     private JTextField inputField;
+    private JButton goButton;
     private JTree classTree;
     private JPanel centerPanel;
     private JPanel topPanel;
 
-    public Display() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+    public Display() {
         initFrame();
         initTopPanel();
-        initCenterPanel();
         frame.setVisible(true);
+
+        goButton.addActionListener(e -> {
+            try {
+                initCenterPanel();
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private void initFrame() {
         frame = new JFrame("Class Viewer");
         frame.setContentPane(new JPanel(new BorderLayout()));
-        frame.setSize(300,300);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
@@ -42,21 +41,24 @@ public class Display {
     private void initTopPanel() {
         inputLabel = new JLabel("Enter class name");
         inputField = new JTextField();
-        inputField.setColumns(6);
+        goButton = new JButton("Display POJO");
+        inputField.setColumns(15);
         topPanel = new JPanel(new FlowLayout());
         topPanel.add(inputLabel);
         topPanel.add(inputField);
+        topPanel.add(goButton);
         frame.getContentPane().add(topPanel, BorderLayout.NORTH);
+        frame.pack();
     }
 
-    private void initCenterPanel() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-
-        Model model = new Model();
+    private void initCenterPanel() throws ClassNotFoundException {
         centerPanel = new JPanel();
-        classTree = new JTree(node(TestPojo.class));
+        classTree = new JTree(node(Class.forName(inputField.getText())));
         centerPanel.add(classTree);
         JScrollPane scrollPane = new JScrollPane(centerPanel);
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        frame.setVisible(true);
+        frame.pack();
     }
 
     DefaultMutableTreeNode initTree() {

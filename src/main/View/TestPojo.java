@@ -1,4 +1,4 @@
-package main.View;
+package View;
 
 public class TestPojo {
     String thing;
