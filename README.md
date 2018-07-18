@@ -1,2 +1,2 @@
-# PojoViewer
-Simple Plain-Old-Java-Object viewer.
+# ClassViewer
+View java class hierarchies as trees
